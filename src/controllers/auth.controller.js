@@ -57,7 +57,19 @@ const { accessToken, refreshToken, user } = await authService.loginService(req.b
   });
 };
 
+const getMe = (req, res) => {
+  return res.status(200).json({
+    success: true,
+    message: "Successfully fetched user details",
+    user: {
+      name: req.user.name,
+      email: req.user.email,
+    }
+  });
+}
+
 export default {
   registerController,
   loginController,
+  getMe
 };

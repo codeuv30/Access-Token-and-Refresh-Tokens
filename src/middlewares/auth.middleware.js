@@ -1,7 +1,7 @@
 import jwt from "jsonwebtoken";
 import User from "../models/user.model.js";
 
-const authMiddleware = (req, res, next) => {
+const authMiddleware = async (req, res, next) => {
   try {
     const accessToken = req.cookies.accessToken;
 
@@ -21,7 +21,7 @@ const authMiddleware = (req, res, next) => {
       });
     }
 
-    const user = User.findOne({ _id: decoded.id });
+    const user = await User.findOne({ _id: decoded.id });
 
     req.user = user;
 
