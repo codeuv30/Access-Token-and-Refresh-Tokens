@@ -15,7 +15,7 @@ const registerController = async (req, res) => {
     res,
     cookieName: "refreshToken",
     cookieValue: refreshToken,
-    maxAge: 1 * 60 * 60 * 24, // 1d
+    maxAge: 1 * 60 * 60 * 24 * 1000, // 1d
   });
 
   return res.status(201).json({
@@ -39,7 +39,7 @@ const { accessToken, refreshToken, user } = await authService.loginService(req.b
     res,
     cookieName: "refreshToken",
     cookieValue: refreshToken,
-    maxAge: 1 * 60 * 60 * 24, // 1d
+    maxAge: 1 * 60 * 60 * 24 * 1000, // 1d
   });
 
   return res.status(201).json({
@@ -53,7 +53,7 @@ const getMe = (req, res) => {
   return res.status(200).json({
     success: true,
     message: "Successfully fetched user details",
-    user
+    user: req.user
   });
 }
 

@@ -5,20 +5,24 @@ export const axiosInstance = axios.create({
     withCredentials: true
 });
 
-// axiosInstance.interceptors.request.use();
-
 axiosInstance.interceptors.response.use(
     (response) => {
-        console.log("Axios instance response ---->", response);
-
         return response;
     },
-    (error) => {
-        console.log("error in response ---->", error);
+    async (error) => {
+        const originalRequest = error.config;
 
+        if(error.response.status === 401 && !originalRequest.retry) {
+            originalRequest.retry = true;
 
-        if(error.response.status === 401) {
-            axiosInstance.get("/get-accessToken");
+            try {
+                const res = await axiosInstance.get("/auth/get-accessToken");   
+                return axiosInstance(originalRequest);
+            } catch (error) {
+                console.log("res: ", error);
+                window.location.href = "/";
+                return Promise.reject(error);
+            }
         }
     }
-);
+)

@@ -16,7 +16,7 @@ const registerService = async (data) => {
     });
 
     if (isExisting) {
-      throw new Error("Incorrect email or password");
+      throw new Error("User already exists with the name email or name");
     }
 
     const hashPassword = await bcrypt.hash(password, 10);
@@ -46,14 +46,14 @@ const registerService = async (data) => {
 
 const loginService = async (data) => {
   try {
-    const { name, email, password } = data;
+    const { email, password } = data;
 
-    if (!name || !email || !password) {
+    if (!email || !password) {
       throw new Error("All fields are required");
     }
 
     const user = await User.findOne({
-      $or: [{ name }, { email }],
+      email
     });
 
     if (!user) {
