@@ -21,11 +21,7 @@ const registerController = async (req, res) => {
   return res.status(201).json({
     success: true,
     message: "User registered successfully",
-    user: {
-        name: user.name,
-        email: user.email,
-        id: user._id
-    }
+    user
   });
 };
 
@@ -49,11 +45,7 @@ const { accessToken, refreshToken, user } = await authService.loginService(req.b
   return res.status(201).json({
     success: true,
     message: "User logged in successfully",
-    user: {
-        name: user.name,
-        email: user.email,
-        id: user._id
-    }
+    user
   });
 };
 
@@ -61,15 +53,38 @@ const getMe = (req, res) => {
   return res.status(200).json({
     success: true,
     message: "Successfully fetched user details",
-    user: {
-      name: req.user.name,
-      email: req.user.email,
-    }
+    user
+  });
+}
+
+const getAccessToken = async (req, res) => {
+  const refreshToken = req.cookies.refreshToken;
+
+  if(!refreshToken) {
+    return res.status(400).json({
+      success: false,
+      message: "Refresh Token is required"
+    })
+  }
+
+  const accessToken = await authService.getAccessToken(refreshToken);
+
+  authUtils.sendCookie({
+    res,
+    cookieName: "accessToken",
+    cookieValue: accessToken,
+    maxAge: 5 * 60 * 1000 // 5m
+  });
+
+  return res.status(200).json({
+    success: false,
+    message: "Access token generated"
   });
 }
 
 export default {
   registerController,
   loginController,
-  getMe
+  getMe,
+  getAccessToken
 };
