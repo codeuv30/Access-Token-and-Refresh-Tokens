@@ -1,6 +1,7 @@
 import { ThemeProvider } from "@/components/theme-provider";
 import Navbar from "@/components/Navbar";
 import "./globals.css";
+import { AuthProvider } from "@/context/authContext";
 
 export const metadata = {
   title: "Ecommerce",
@@ -13,15 +14,17 @@ export default function RootLayout({ children }) {
       <html lang="en" suppressHydrationWarning>
         <head />
         <body>
-          <ThemeProvider
-            attribute="class"
-            defaultTheme="system"
-            enableSystem
-            disableTransitionOnChange
-          >
+          <AuthProvider>
+            <ThemeProvider
+              attribute="class"
+              defaultTheme="system"
+              enableSystem
+              disableTransitionOnChange
+            >
               <Navbar />
               {children}
-          </ThemeProvider>
+            </ThemeProvider>
+          </AuthProvider>
         </body>
       </html>
     </>
